@@ -1,4 +1,4 @@
-package com.bankcorp.accounts.entity;
+package com.bankcorp.accounts.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,9 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "customers")
+@Builder
+@Entity
+@Table(name = "customers")
 public class Customer extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

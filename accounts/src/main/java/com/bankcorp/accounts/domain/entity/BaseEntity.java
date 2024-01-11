@@ -1,4 +1,4 @@
-package com.bankcorp.accounts.entity;
+package com.bankcorp.accounts.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
