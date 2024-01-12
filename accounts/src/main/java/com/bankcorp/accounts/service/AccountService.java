@@ -15,4 +15,11 @@ public interface AccountService {
      * @return Account details based on given mobileNumber
      */
     CustomerDTO fetchAccount(String mobileNumber);
+
+    /**
+     *
+     * @param customerDTO - Customer DTO object
+     * @return boolean indicating if the update od Account details is successful or not
+     */
+    boolean updateAccount(CustomerDTO customerDTO);
 }

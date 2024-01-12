@@ -72,4 +72,13 @@ public class AccountServiceImpl implements AccountService {
         customerDTO.setAccountDTO(AccountMapper.mapToAccountDTO(account));
         return customerDTO;
     }
+
+    /**
+     * @param customerDTO - Customer DTO object
+     * @return boolean indicating if the update od Account details is successful or not
+     */
+    @Override
+    public boolean updateAccount(CustomerDTO customerDTO) {
+        return false;
+    }
 }
