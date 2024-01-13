@@ -76,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * @param customerDTO - Customer DTO object
-     * @return boolean indicating if the update od Account details is successful or not
+     * @return boolean indicating if the update of Account details is successful or not
      */
     @Override
     public boolean updateAccount(CustomerDTO customerDTO) {
@@ -98,5 +98,19 @@ public class AccountServiceImpl implements AccountService {
             isUpdated = true;
         }
         return  isUpdated;
+    }
+
+    /**
+     * @param mobileNumber - Input mobile number
+     * @return boolean indicating if delete of Account details is successful or not
+     */
+    @Override
+    public boolean deleteAccount(String mobileNumber) {
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
+                () -> new ResourceNotFoundException("Customer","MobileNumber",mobileNumber)
+        );
+        accountRepository.deleteByCustomerId(customer.getCustomerId());
+        customerRepository.deleteById(customer.getCustomerId());
+        return true;
     }
 }

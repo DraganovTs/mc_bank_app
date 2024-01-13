@@ -19,7 +19,14 @@ public interface AccountService {
     /**
      *
      * @param customerDTO - Customer DTO object
-     * @return boolean indicating if the update od Account details is successful or not
+     * @return boolean indicating if the update of Account details is successful or not
      */
     boolean updateAccount(CustomerDTO customerDTO);
+
+    /**
+     *
+     * @param mobileNumber - Input mobile number
+     * @return boolean indicating if delete of Account details is successful or not
+     */
+    boolean deleteAccount(String mobileNumber);
 }
