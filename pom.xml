@@ -5,6 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>accounts</module>
+        <module>cards</module>
+        <module>loans</module>
     </modules>
 
     <parent>
