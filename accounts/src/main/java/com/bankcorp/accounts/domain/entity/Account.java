@@ -13,7 +13,6 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Entity
 @Table(name = "accounts")
 public class Account extends BaseEntity{

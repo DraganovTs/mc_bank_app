@@ -5,19 +5,17 @@ import com.bankcorp.accounts.domain.entity.Customer;
 
 public class CustomerMapper {
 
-    public static CustomerDTO mapToCustomerDTO(Customer customer) {
-        return CustomerDTO.builder()
-                .name(customer.getName())
-                .email(customer.getEmail())
-                .mobileNumber(customer.getMobileNumber())
-                .build();
+    public static CustomerDTO mapToCustomerDTO(Customer customer, CustomerDTO customerDTO) {
+        customerDTO.setName(customer.getName());
+        customerDTO.setEmail(customer.getEmail());
+        customerDTO.setMobileNumber(customer.getMobileNumber());
+        return customerDTO;
     }
 
-    public static Customer mapToCustomer(CustomerDTO customerDTO) {
-        return Customer.builder()
-                .name(customerDTO.getName())
-                .email(customerDTO.getEmail())
-                .mobileNumber(customerDTO.getMobileNumber())
-                .build();
+    public static Customer mapToCustomer(CustomerDTO customerDTO, Customer customer) {
+        customer.setName(customerDTO.getName());
+        customer.setEmail(customerDTO.getEmail());
+        customer.setMobileNumber(customerDTO.getMobileNumber());
+        return customer;
     }
 }
