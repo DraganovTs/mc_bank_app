@@ -15,7 +15,6 @@ import com.bankcorp.accounts.service.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -29,6 +28,7 @@ public class AccountServiceImpl implements AccountService {
     /**
      * @param customerDTO - Customer DTO Object
      */
+
     @Override
     public void createAccount(CustomerDTO customerDTO) {
         Customer customer = CustomerMapper.mapToCustomer(customerDTO , new Customer());
@@ -37,8 +37,7 @@ public class AccountServiceImpl implements AccountService {
             throw new CustomerAlreadyExistException("Customer already registered with given mobileNumber "
                     +customerDTO.getMobileNumber());
         }
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy("Anonymous");
+
         Customer savedCustomer = customerRepository.save(customer);
         accountRepository.save(createNewAccount(savedCustomer));
     }
@@ -51,8 +50,7 @@ public class AccountServiceImpl implements AccountService {
         newAccount.setAccountNumber(randomAccNumber);
         newAccount.setAccountType(AccountConstants.SAVINGS);
         newAccount.setBranchAddress(AccountConstants.ADDRESS);
-        newAccount.setCreatedAt(LocalDateTime.now());
-        newAccount.setCreatedBy("Anonymous");
+
         return newAccount;
     }
 
@@ -61,6 +59,7 @@ public class AccountServiceImpl implements AccountService {
      * @param mobileNumber - Input mobile number
      * @return Account details based on given mobileNumber
      */
+
     @Override
     public CustomerDTO fetchAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
@@ -78,6 +77,7 @@ public class AccountServiceImpl implements AccountService {
      * @param customerDTO - Customer DTO object
      * @return boolean indicating if the update of Account details is successful or not
      */
+
     @Override
     public boolean updateAccount(CustomerDTO customerDTO) {
         boolean isUpdated = false;
@@ -104,6 +104,7 @@ public class AccountServiceImpl implements AccountService {
      * @param mobileNumber - Input mobile number
      * @return boolean indicating if delete of Account details is successful or not
      */
+
     @Override
     public boolean deleteAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
