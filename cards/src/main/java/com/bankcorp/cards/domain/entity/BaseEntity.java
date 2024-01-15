@@ -1,4 +1,4 @@
-package com.bankcorp.loans.domain.entity;
+package com.bankcorp.cards.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
