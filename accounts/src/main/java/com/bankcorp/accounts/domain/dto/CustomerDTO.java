@@ -36,6 +36,5 @@ public class CustomerDTO {
     @Schema(
             description = "Account details of the customer"
     )
-    @NotEmpty(message = "Name can not be null or empty!")
     private AccountDTO accountDTO;
 }

@@ -27,7 +27,7 @@ public interface LoanService {
     /**
      *
      * @param mobileNumber - Input MobileNumber
-     * @return boolean indicating if the delete of loan details is successful or not
+     * @return boolean indicating if delete of loan details is successful or not
      */
     boolean deleteLoan(String mobileNumber);
 }
