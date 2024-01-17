@@ -1,0 +1,37 @@
+services:
+  accounts:
+    image: "tzetzaka2/accounts:s4"
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - bankcorp
+  loans:
+    image: "tzetzaka2/loans:s4"
+    container_name: loans-ms
+    ports:
+      - "8081:8081"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - bankcorp
+  cards:
+    image: "tzetzaka2/cards:s4"
+    container_name: cards-ms
+    ports:
+      - "9000:9000"
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - bankcorp
+networks:
+  bankcorp:
+    driver: "bridge"
