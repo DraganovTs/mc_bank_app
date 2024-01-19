@@ -1,0 +1,11 @@
+build:
+  version: "3.0"
+
+accounts:
+  message: "Welcome to bankcorp accounts related local APIs"
+  contactDetails:
+    name: "Gospodin Gospodinov"
+    email: "gospodin@example.com"
+  onCallSupport:
+    -(888)888-8888
+    -(999)999-9999

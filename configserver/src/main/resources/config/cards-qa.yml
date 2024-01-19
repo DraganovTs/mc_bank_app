@@ -1,0 +1,11 @@
+build:
+  version: "2.0"
+
+accounts:
+  message: "Welcome to bankcorp accounts related QA APIs"
+  contactDetails:
+    name: "Ivan Ivanov"
+    email: "ivan@example.com"
+  onCallSupport:
+    -(555)555-5555
+    -(666)666-6666
