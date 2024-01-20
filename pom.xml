@@ -29,7 +29,7 @@
         <h2.version>2.2.224</h2.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
-        <spring.cloud.config.version>4.0.3</spring.cloud.config.version>
+        <spring.cloud.config.version>4.0.1</spring.cloud.config.version>
     </properties>
 
     <dependencyManagement>
@@ -78,6 +78,7 @@
                 <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc-openapi-starter-webmvc-ui.version}</version>
             </dependency>
+          <!--            spring-cloud-dependencies -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -95,6 +96,18 @@
                 <artifactId>spring-cloud-config-client</artifactId>
                 <version>${spring.cloud.config.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bus-amqp</artifactId>
+                <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-config-monitor</artifactId>
+                <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <!--            spring-cloud-dependencies -->
+
         </dependencies>
     </dependencyManagement>
 
