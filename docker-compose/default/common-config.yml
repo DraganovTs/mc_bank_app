@@ -9,7 +9,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1700m
+          memory: 700m
     environment:
       SPRING_RABBITMQ_HOST: "rabbit"
 
@@ -17,8 +17,10 @@ services:
     extends:
       service: microservice-base-config
     depends_on:
-      configserver:
-        condition: service_healthy
+      - configserver
+    entrypoint: [ 'check-config-server-started.sh' ]
     environment:
       SPRING_PROFILES_ACTIVE: default
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071/"
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+    volumes:
+      - "./check-config-server-started.sh:/usr/local/bin/check-config-server-started.sh"
