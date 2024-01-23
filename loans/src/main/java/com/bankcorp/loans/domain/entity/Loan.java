@@ -9,6 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "loans")
 public class Loan extends BaseEntity{
 
     @Id

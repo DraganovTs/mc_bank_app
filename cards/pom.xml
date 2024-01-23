@@ -65,7 +65,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
-                        <name>tzetzaka2/${project.artifactId}:s6</name>
+                        <name>tzetzaka2/${project.artifactId}:s7</name>
                     </image>
                 </configuration>
             </plugin>
