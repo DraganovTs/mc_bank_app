@@ -8,7 +8,7 @@ services:
       service: network-deploy-service
     image: mysql
     healthcheck:
-      test: ["CMD","mysqladmin","ping","-h","localhost"]
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       timeout: 10s
       retries: 10
       interval: 10s
@@ -22,7 +22,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 700m
+          memory: 1700m
     environment:
       SPRING_RABBITMQ_HOST: "rabbit"
 
@@ -37,3 +37,12 @@ services:
       SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+
+  microservice-eureka-config:
+    extends:
+      service: microservice-configserver-config
+    depends_on:
+      eurekaserver:
+        condition: service_healthy
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
