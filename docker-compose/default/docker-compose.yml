@@ -110,6 +110,7 @@ services:
       file: common-config.yml
       service: microservice-eureka-config
 
+
   cards:
     image: "tzetzaka2/cards:s8"
     container_name: cards-ms

@@ -9,6 +9,7 @@
         <module>loans</module>
         <module>configserver</module>
         <module>eurekaserver</module>
+        <module>gatewayserver</module>
     </modules>
 
     <parent>
@@ -31,6 +32,7 @@
         <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
         <spring.cloud.config.version>4.0.1</spring.cloud.config.version>
+        <spring.cloud.starter.gateway.version>4.1.1</spring.cloud.starter.gateway.version>
     </properties>
 
     <dependencyManagement>
@@ -121,6 +123,11 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
                 <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${spring.cloud.starter.gateway.version}</version>
             </dependency>
             <!--            spring-cloud-dependencies -->
 
