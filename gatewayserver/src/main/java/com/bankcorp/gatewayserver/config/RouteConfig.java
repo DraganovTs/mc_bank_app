@@ -17,19 +17,21 @@ public class RouteConfig {
                 .route(path -> path
                         .path("/bankcorp/accounts/**")
                         .filters(filter -> filter.rewritePath("/bankcorp/accounts/(?<segment>.*)",
-                                "/${segment}")
-                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
+                                        "/${segment}")
+                                .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+                                .circuitBreaker(config -> config.setName("accountsCircuitBreaker")
+                                        .setFallbackUri("forward:/contactSupport")))
                         .uri("lb://ACCOUNTS"))
                 .route(path -> path
                         .path("/bankcorp/loans/**")
                         .filters(filter -> filter.rewritePath("/bankcorp/accounts/(?<segment>.*)",
-                                "/${segment}")
+                                        "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://LOANS"))
                 .route(path -> path
                         .path("/bankcorp/cards/**")
                         .filters(filter -> filter.rewritePath("/bankcorp/accounts/(?<segment>.*)",
-                                "/${segment}")
+                                        "/${segment}")
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
                         .uri("lb://CARDS"))
                 .build();
