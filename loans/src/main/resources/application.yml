@@ -68,3 +68,9 @@ info:
     name: "loans"
     description: "Bankcorp Loans Application"
     version: "1.0.0"
+
+logging:
+  level:
+    com:
+      bankcorp:
+        loans: DEBUG
