@@ -32,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return Customer details based on a given mobileNumber
      */
     @Override
-    public CustomerDetailsDTO fetchCustomerDetails(String mobileNumber,String correlationId) {
+    public CustomerDetailsDTO fetchCustomerDetails(String mobileNumber, String correlationId) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber).orElseThrow(
                 () -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber)
         );
@@ -44,11 +44,15 @@ public class CustomerServiceImpl implements CustomerService {
                 new CustomerDetailsDTO());
         customerDetailsDTO.setAccountDTO(AccountMapper.mapToAccountDTO(accounts, new AccountDTO()));
 
-        ResponseEntity<LoanDTO> loanDTOResponseEntity = loansFeignClient.fetchLoanDetails(correlationId,mobileNumber);
-        customerDetailsDTO.setLoanDTO(loanDTOResponseEntity.getBody());
+        ResponseEntity<LoanDTO> loanDTOResponseEntity = loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
+        if (loanDTOResponseEntity != null) {
+            customerDetailsDTO.setLoanDTO(loanDTOResponseEntity.getBody());
+        }
 
-        ResponseEntity<CardDTO> cardDTOResponseEntity = cardsFeignClient.fetchCardDetails(correlationId,mobileNumber);
-        customerDetailsDTO.setCardDTO(cardDTOResponseEntity.getBody());
+        ResponseEntity<CardDTO> cardDTOResponseEntity = cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
+        if (cardDTOResponseEntity != null) {
+            customerDetailsDTO.setCardDTO(cardDTOResponseEntity.getBody());
+        }
 
 
         return customerDetailsDTO;

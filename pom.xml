@@ -129,6 +129,7 @@
                 <artifactId>spring-cloud-starter-gateway</artifactId>
                 <version>${spring.cloud.starter.gateway.version}</version>
             </dependency>
+
             <!--            spring-cloud-dependencies -->
 
         </dependencies>
