@@ -24,7 +24,7 @@
       <module name="eurekaserver" options="-parameters" />
       <module name="gatewayserver" options="-parameters" />
       <module name="loans" options="-parameters" />
-      <module name="mc_bank_app" options="" />
+      <module name="mc_bank_app" options="-parameters" />
     </option>
   </component>
 </project>
