@@ -246,6 +246,7 @@ public class CardController {
     })
     @GetMapping("/contact-info")
     public ResponseEntity<AccountContactInfoDTO>getContactInfo(){
+        logger.debug("Invoked Cards contact-info API");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(accountContactInfoDTO);
