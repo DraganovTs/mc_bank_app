@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.TimeoutException;
+
 @Tag(
         name = "CRUD REST APIs for Account in Bank Microservice Application",
         description = "CRUD REST APIs in Bank MC Application to CREATE,UPDATE,FETCH AND DELETE account details"
@@ -196,7 +198,7 @@ public class AccountsController {
     })
     @Retry(name = "getBuildVersion",fallbackMethod = "getBuildVersionFallback")
     @GetMapping("/build-info")
-    public ResponseEntity<String>getBuildVersion(){
+    public ResponseEntity<String>getBuildVersion() {
         logger.debug("getBuildVersion method invoked");
         return ResponseEntity
                 .status(HttpStatus.OK)
