@@ -34,6 +34,7 @@
         <spring.cloud.config.version>4.0.1</spring.cloud.config.version>
         <spring.cloud.starter.gateway.version>4.1.1</spring.cloud.starter.gateway.version>
         <spring.boot.starter.data.redis.reactive>3.2.2</spring.boot.starter.data.redis.reactive>
+        <micrometer.registry.prometheus>1.12.2</micrometer.registry.prometheus>
     </properties>
 
     <dependencyManagement>
@@ -42,6 +43,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+                <version>${micrometer.registry.prometheus}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
