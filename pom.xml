@@ -35,7 +35,7 @@
         <spring.cloud.starter.gateway.version>4.1.1</spring.cloud.starter.gateway.version>
         <spring.boot.starter.data.redis.reactive.version>3.2.2</spring.boot.starter.data.redis.reactive.version>
         <micrometer.registry.prometheus.version>1.12.2</micrometer.registry.prometheus.version>
-        <opentelemetry.javaagent.version>2.0.0</opentelemetry.javaagent.version>
+        <opentelemetry.javaagent.version>1.32.0</opentelemetry.javaagent.version>
     </properties>
 
     <dependencyManagement>
