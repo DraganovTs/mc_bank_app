@@ -3,20 +3,6 @@ server:
 spring:
   application:
     name: "cards"
-#  datasource:
-#    url: jdbc:h2:mem:testdb
-#    driverClassName: org.h2.Driver
-#    username: tz
-#    password: ''
-#  h2:
-#    console:
-#      enabled: true
-#  jpa:
-#    database-platform: org.hibernate.dialect.H2Dialect
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-
   datasource:
     url: jdbc:mysql://localhost:3308/cardsdb
     username: root
@@ -61,6 +47,7 @@ management:
     tags:
       application: ${spring.application.name}
 
+
 endpoints:
   shutdown:
     enabled: true
@@ -85,3 +72,5 @@ logging:
     com:
       bankcorp:
         cards: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name},%X{trace_id},%X{span_id}]"

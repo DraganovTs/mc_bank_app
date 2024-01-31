@@ -33,8 +33,9 @@
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
         <spring.cloud.config.version>4.0.1</spring.cloud.config.version>
         <spring.cloud.starter.gateway.version>4.1.1</spring.cloud.starter.gateway.version>
-        <spring.boot.starter.data.redis.reactive>3.2.2</spring.boot.starter.data.redis.reactive>
-        <micrometer.registry.prometheus>1.12.2</micrometer.registry.prometheus>
+        <spring.boot.starter.data.redis.reactive.version>3.2.2</spring.boot.starter.data.redis.reactive.version>
+        <micrometer.registry.prometheus.version>1.12.2</micrometer.registry.prometheus.version>
+        <opentelemetry.javaagent.version>2.0.0</opentelemetry.javaagent.version>
     </properties>
 
     <dependencyManagement>
@@ -47,7 +48,7 @@
             <dependency>
                 <groupId>io.micrometer</groupId>
                 <artifactId>micrometer-registry-prometheus</artifactId>
-                <version>${micrometer.registry.prometheus}</version>
+                <version>${micrometer.registry.prometheus.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -141,8 +142,15 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
-                <version>${spring.boot.starter.data.redis.reactive}</version>
+                <version>${spring.boot.starter.data.redis.reactive.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.javaagent</groupId>
+                <artifactId>opentelemetry-javaagent</artifactId>
+                <version>${opentelemetry.javaagent.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
