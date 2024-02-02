@@ -55,7 +55,7 @@
                 <version>3.4.0</version>
                 <configuration>
                     <to>
-                        <image>tzetzaka2/${project.artifactId}:s11</image>
+                        <image>tzetzaka2/${project.artifactId}:s12</image>
                     </to>
                 </configuration>
             </plugin>
