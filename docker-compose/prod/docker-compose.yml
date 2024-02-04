@@ -390,7 +390,7 @@ services:
       SPRING_DATA_REDIS_PORT: 6379
       SPRING_DATA_REDIS_TIMEOUT: 1s
       OTEL_SERVICE_NAME: "gatewayserver"
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWTK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
     extends:
       file: common-config.yml
       service: microservice-eureka-config

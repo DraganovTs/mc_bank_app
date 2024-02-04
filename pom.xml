@@ -10,6 +10,7 @@
         <module>configserver</module>
         <module>eurekaserver</module>
         <module>gatewayserver</module>
+        <module>message</module>
     </modules>
 
     <parent>
@@ -41,6 +42,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-actuator</artifactId>
@@ -153,7 +159,16 @@
                 <artifactId>spring-cloud-starter-gateway</artifactId>
                 <version>${spring.cloud.starter.gateway.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-function-context</artifactId>
+                <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-function-web</artifactId>
+                <version>${spring.cloud.config.version}</version>
+            </dependency>
             <!--            spring-cloud-dependencies -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
