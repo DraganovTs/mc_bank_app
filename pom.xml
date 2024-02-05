@@ -32,7 +32,7 @@
         <h2.version>2.2.224</h2.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.3.0</springdoc-openapi-starter-webmvc-ui.version>
         <spring-cloud-dependencies.version>2023.0.0</spring-cloud-dependencies.version>
-        <spring.cloud.config.version>4.0.1</spring.cloud.config.version>
+        <spring.cloud.config.version>4.1.0</spring.cloud.config.version>
         <spring.cloud.starter.gateway.version>4.1.1</spring.cloud.starter.gateway.version>
         <spring.boot.starter.data.redis.reactive.version>3.2.2</spring.boot.starter.data.redis.reactive.version>
         <micrometer.registry.prometheus.version>1.12.2</micrometer.registry.prometheus.version>
@@ -167,6 +167,16 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-function-web</artifactId>
+                <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-stream</artifactId>
+                <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
                 <version>${spring.cloud.config.version}</version>
             </dependency>
             <!--            spring-cloud-dependencies -->

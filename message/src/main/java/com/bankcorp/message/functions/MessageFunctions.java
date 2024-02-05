@@ -15,17 +15,17 @@ public class MessageFunctions {
     private static final Logger log = LoggerFactory.getLogger(MessageFunctions.class);
 
     @Bean
-    public Function<AccountsMessageDTO, AccountsMessageDTO> email() {
+    public Function<AccountsMessageDTO,AccountsMessageDTO> email() {
         return accountsMessageDTO -> {
-          log.info("Sending email with the details: " + accountsMessageDTO.toString());
-          return accountsMessageDTO;
+            log.info("Sending email with the details : " +  accountsMessageDTO.toString());
+            return accountsMessageDTO;
         };
     }
 
     @Bean
-    public Function<AccountsMessageDTO, Long> sms() {
+    public Function<AccountsMessageDTO,Long> sms() {
         return accountsMessageDTO -> {
-            log.info("Sending sms with the details: " + accountsMessageDTO.toString());
+            log.info("Sending sms with the details : " +  accountsMessageDTO.toString());
             return accountsMessageDTO.accountNumber();
         };
     }

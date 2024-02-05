@@ -88,7 +88,7 @@
                 <version>3.4.0</version>
                 <configuration>
                     <to>
-                        <image>tzetzaka2/${project.artifactId}:s12</image>
+                        <image>tzetzaka2/${project.artifactId}:s13</image>
                     </to>
                 </configuration>
             </plugin>
