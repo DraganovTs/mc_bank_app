@@ -271,7 +271,7 @@ services:
       service: network-deploy-service
 
   configserver:
-    image: "tzetzaka2/configserver:s12"
+    image: "tzetzaka2/configserver:s13"
     container_name: configserver-ms
     ports:
       - "8071:8071"
@@ -291,7 +291,7 @@ services:
       OTEL_SERVICE_NAME: "configserver"
 
   eurekaserver:
-    image: "tzetzaka2/eurekaserver:s12"
+    image: "tzetzaka2/eurekaserver:s13"
     container_name: eurekaserver-ms
     ports:
       - "8070:8070"
@@ -309,7 +309,7 @@ services:
       OTEL_SERVICE_NAME: "eurekaserver"
 
   accounts:
-    image: "tzetzaka2/accounts:s12"
+    image: "tzetzaka2/accounts:s13"
     container_name: accounts-ms
     healthcheck:
       test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
@@ -321,15 +321,18 @@ services:
       SPRING_APPLICATION_NAME: "accounts"
       SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
       OTEL_SERVICE_NAME: "accounts"
+      SPRING_RABBITMQ_HOST: "rabbit"
     depends_on:
       accountsdb:
+        condition: service_healthy
+      rabbit:
         condition: service_healthy
     extends:
       file: common-config.yml
       service: microservice-eureka-config
 
   loans:
-    image: "tzetzaka2/loans:s12"
+    image: "tzetzaka2/loans:s13"
     container_name: loans-ms
     healthcheck:
       test: "curl --fail --silent localhost:8090/actuator/health/readiness | grep UP || exit 1"
@@ -350,7 +353,7 @@ services:
 
 
   cards:
-    image: "tzetzaka2/cards:s12"
+    image: "tzetzaka2/cards:s13"
     container_name: cards-ms
     healthcheck:
       test: "curl --fail --silent localhost:9000/actuator/health/readiness | grep UP || exit 1"
@@ -370,7 +373,7 @@ services:
       service: microservice-eureka-config
 
   gatewayserver:
-    image: "tzetzaka2/gatewayserver:s12"
+    image: "tzetzaka2/gatewayserver:s13"
     container_name: gatewayserver-ms
     ports:
       - "8072:8072"
@@ -394,6 +397,18 @@ services:
     extends:
       file: common-config.yml
       service: microservice-eureka-config
+
+  message:
+    image: "tzetzaka2/message:s13"
+    container_name: message-ms
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      SPRING_RABBITMQ_HOST: "rabbit"
+    extends:
+      file: common-config.yml
+      service: network-deploy-service
 
 networks:
   bankcorp:
