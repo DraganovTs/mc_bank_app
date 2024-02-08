@@ -7,10 +7,10 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     static_configs:
       - targets: ['accounts:8080']
-  - job_name: "loans"
+  - job_name: "4"
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: [ 'loans:8090' ]
+      - targets: [ '4:8090' ]
   - job_name: "cards"
     metrics_path: '/actuator/prometheus'
     static_configs:

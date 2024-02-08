@@ -26,7 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.concurrent.TimeoutException;
+
 
 @Tag(
         name = "CRUD REST APIs for Account in Bank Microservice Application",
