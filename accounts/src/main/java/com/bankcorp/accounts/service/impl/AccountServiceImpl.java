@@ -46,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
 
         Customer savedCustomer = customerRepository.save(customer);
         Account savedAccount = accountRepository.save(createNewAccount(savedCustomer));
-        sendCommunication(savedAccount, savedCustomer);
+//        sendCommunication(savedAccount, savedCustomer);
     }
 
     private void sendCommunication(Account account, Customer customer) {
