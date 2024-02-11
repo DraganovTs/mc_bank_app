@@ -6,7 +6,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
-    username: sa
+    username: tz
     password: ''
   h2:
     console:
@@ -22,6 +22,19 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: true
+    function:
+      definition: updateCommunication
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent
+          group: ${spring.application.name}
+        sendCommunication-out-0:
+          destination: send-communication
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
 
 
 management:
