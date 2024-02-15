@@ -69,9 +69,9 @@ diagnosticMode:
 
 ## Bitnami Kafka image version
 ## ref: https://hub.docker.com/r/bitnami/kafka/tags/
-## @param image.registry [default: REGISTRY_NAME] Kafka image registry
-## @param image.repository [default: REPOSITORY_NAME/kafka] Kafka image repository
-## @skip image.tag Kafka image tag (immutable tags are recommended)
+## @param image.registry Kafka image registry
+## @param image.repository Kafka image repository
+## @param image.tag Kafka image tag (immutable tags are recommended)
 ## @param image.digest Kafka image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
 ## @param image.pullPolicy Kafka image pull policy
 ## @param image.pullSecrets Specify docker-registry secret names as an array
@@ -80,11 +80,11 @@ diagnosticMode:
 image:
   registry: docker.io
   repository: bitnami/kafka
-  tag: 3.6.1-debian-11-r6
+  tag: 3.5.1-debian-11-r35
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-  ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+  ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
@@ -111,15 +111,6 @@ existingConfigmap: ""
 ## @param extraConfig Additional configuration to be appended at the end of the generated Kafka configuration file.
 ##
 extraConfig: ""
-## @param secretConfig Additional configuration to be appended at the end of the generated Kafka configuration file.
-## This value will be stored in a secret.
-##
-secretConfig: ""
-## @param existingSecretConfig Secret with additonal configuration that will be appended to the end of the generated Kafka configuration file
-## The key for the configuration should be: server-secret.properties
-## NOTE: This will override secretConfig value
-##
-existingSecretConfig: ""
 ## @param log4j An optional log4j.properties file to overwrite the default of the Kafka brokers
 ## An optional log4j.properties file to overwrite the default of the Kafka brokers
 ## ref: https://github.com/apache/kafka/blob/trunk/config/log4j.properties
@@ -198,7 +189,7 @@ listeners:
 ## Kafka SASL settings for authentication, required if SASL_PLAINTEXT or SASL_SSL listeners are configured
 ##
 sasl:
-  ## @param sasl.enabledMechanisms Comma-separated list of allowed SASL mechanisms when SASL listeners are configured. Allowed types: `PLAIN`, `SCRAM-SHA-256`, `SCRAM-SHA-512`, `OAUTHBEARER`
+  ## @param sasl.enabledMechanisms Comma-separated list of allowed SASL mechanisms when SASL listeners are configured. Allowed types: `PLAIN`, `SCRAM-SHA-256`, `SCRAM-SHA-512`
   ## NOTE: At the moment, Kafka Raft mode does not support SCRAM, that is why only PLAIN is configured.
   ##
   enabledMechanisms: PLAIN,SCRAM-SHA-256,SCRAM-SHA-512
@@ -208,39 +199,20 @@ sasl:
   ## @param sasl.controllerMechanism SASL mechanism for controller communications.
   ##
   controllerMechanism: PLAIN
-  ## Settings for oauthbearer mechanism
-  ## @param sasl.oauthbearer.tokenEndpointUrl The URL for the OAuth/OIDC identity provider
-  ## @param sasl.oauthbearer.jwksEndpointUrl The OAuth/OIDC provider URL from which the provider's JWKS (JSON Web Key Set) can be retrieved
-  ## @param sasl.oauthbearer.expectedAudience The comma-delimited setting for the broker to use to verify that the JWT was issued for one of the expected audiences
-  ## @param sasl.oauthbearer.subClaimName The OAuth claim name for the subject.
-  ##
-  oauthbearer:
-    tokenEndpointUrl: ""
-    jwksEndpointUrl: ""
-    expectedAudience: ""
-    subClaimName: "sub"
   ## Credentials for inter-broker communications.
   ## @param sasl.interbroker.user Username for inter-broker communications when SASL is enabled
   ## @param sasl.interbroker.password Password for inter-broker communications when SASL is enabled. If not set and SASL is enabled for the controller listener, a random password will be generated.
-  ## @param sasl.interbroker.clientId Client ID for inter-broker communications when SASL is enabled with mechanism OAUTHBEARER
-  ## @param sasl.interbroker.clientSecret Client Secret for inter-broker communications when SASL is enabled with mechanism OAUTHBEARER. If not set and SASL is enabled for the controller listener, a random secret will be generated.
   ##
   interbroker:
     user: inter_broker_user
     password: ""
-    clientId: inter_broker_client
-    clientSecret: ""
   ## Credentials for controller communications.
   ## @param sasl.controller.user Username for controller communications when SASL is enabled
   ## @param sasl.controller.password Password for controller communications when SASL is enabled. If not set and SASL is enabled for the inter-broker listener, a random password will be generated.
-  ## @param sasl.controller.clientId Client ID for controller communications when SASL is enabled with mechanism OAUTHBEARER
-  ## @param sasl.controller.clientSecret Client Secret for controller communications when SASL is enabled with mechanism OAUTHBEARER. If not set and SASL is enabled for the inter-broker listener, a random secret will be generated.
   ##
   controller:
     user: controller_user
     password: ""
-    clientId: controller_broker_client
-    clientSecret: ""
   ## Credentials for client communications.
   ## @param sasl.client.users Comma-separated list of usernames for client communications when SASL is enabled
   ## @param sasl.client.passwords Comma-separated list of passwords for client communications when SASL is enabled, must match the number of client.users
@@ -258,10 +230,8 @@ sasl:
     password: ""
   ## @param sasl.existingSecret Name of the existing secret containing credentials for clientUsers, interBrokerUser, controllerUser and zookeeperUser
   ## Create this secret running the command below where SECRET_NAME is the name of the secret you want to create:
-  ##       kubectl create secret generic SECRET_NAME --from-literal=client-passwords=CLIENT_PASSWORD1,CLIENT_PASSWORD2 --from-literal=inter-broker-password=INTER_BROKER_PASSWORD --from-literal=inter-broker-client-secret=INTER_BROKER_CLIENT_SECRET --from-literal=controller-password=CONTROLLER_PASSWORD --from-literal=controller-client-secret=CONTROLLER_CLIENT_SECRET --from-literal=zookeeper-password=ZOOKEEPER_PASSWORD
-  ## The client secrets are only required when using oauthbearer as sasl mechanism. 
-  ## Client, interbroker and controller passwords are only required if the sasl mechanism includes something other than oauthbearer.
-  ## 
+  ##       kubectl create secret generic SECRET_NAME --from-literal=client-passwords=CLIENT_PASSWORD1,CLIENT_PASSWORD2 --from-literal=inter-broker-password=INTER_BROKER_PASSWORD --from-literal=controller-password=CONTROLLER_PASSWORD --from-literal=zookeeper-password=ZOOKEEPER_PASSWORD
+  ##
   existingSecret: ""
 
 ## @section Kafka TLS parameters
@@ -298,7 +268,6 @@ tls:
   ##        --from-file=kafka-broker-0.crt=./kafka-broker-0.crt --from-file=kafka-broker-0.key=./kafka-broker-0.key ...
   ##
   ## NOTE: Alternatively, a single key and certificate can be provided for all nodes under the keys 'kafka.crt' and 'kafka.key'. These certificates will be used by all nodes unless overridden by the 'kafka-<role>-X.key' and 'kafka-<role>-X.crt' files
-  ## NOTE: Alternatively, a single key and certificate can be provided for all nodes under the keys 'tls.crt' and 'tls.key'. These certificates will be used by all nodes unless overridden by the 'kafka-<role>-X.key' and 'kafka-<role>-X.crt' files
   ##
   existingSecret: ""
   ## @param tls.autoGenerated Generate automatically self-signed TLS certificates for Kafka brokers. Currently only supported if `tls.type` is `PEM`
@@ -329,10 +298,6 @@ tls:
   ## Note: ignored when using 'tls.passwordsSecret'
   ##
   keyPassword: ""
-  ## @param tls.jksKeystoreKey The secret key from the `tls.existingSecret` containing the keystore
-  ## Note: ignored when using 'pem' format for certificates.
-  ##
-  jksKeystoreKey: ""
   ## @param tls.jksTruststoreSecret Name of the existing secret containing your truststore if truststore not existing or different from the one in the `tls.existingSecret`
   ## Note: ignored when using 'pem' format for certificates.
   ##
@@ -440,29 +405,6 @@ sidecars: []
 ##
 initContainers: []
 
-## DNS-Pod services
-## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
-## @param dnsPolicy Specifies the DNS policy for the zookeeper pods
-## DNS policies can be set on a per-Pod basis. Currently Kubernetes supports the following Pod-specific DNS policies.
-## Available options: Default, ClusterFirst, ClusterFirstWithHostNet, None
-## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
-dnsPolicy: ""
-## @param dnsConfig  allows users more control on the DNS settings for a Pod. Required if `dnsPolicy` is set to `None`
-## The dnsConfig field is optional and it can work with any dnsPolicy settings.
-## Ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-dns-config
-## E.g.
-## dnsConfig:
-##   nameservers:
-##     - 192.0.2.1 # this is an example
-##   searches:
-##     - ns1.svc.cluster-domain.example
-##     - my.dns.search.suffix
-##   options:
-##     - name: ndots
-##       value: "2"
-##     - name: edns0
-dnsConfig: {}
-
 ## @section Controller-eligible statefulset parameters
 ##
 controller:
@@ -493,15 +435,6 @@ controller:
   ## @param controller.extraConfig Additional configuration to be appended at the end of the generated Kafka controller-eligible nodes configuration file.
   ##
   extraConfig: ""
-  ## @param controller.secretConfig Additional configuration to be appended at the end of the generated Kafka controller-eligible nodes configuration file.
-  ## This value will be stored in a secret.
-  ##
-  secretConfig: ""
-  ## @param controller.existingSecretConfig Secret with additonal configuration that will be appended to the end of the generated Kafka controller-eligible nodes configuration file
-  ## The key for the configuration should be: server-secret.properties
-  ## NOTE: This will override controller.secretConfig value
-  ##
-  existingSecretConfig: ""
   ## @param controller.heapOpts Kafka Java Heap size for controller-eligible nodes
   ##
   heapOpts: -Xmx1024m -Xms1024m
@@ -584,16 +517,8 @@ controller:
   ## @param controller.lifecycleHooks lifecycleHooks for the Kafka container to automate configuration before or after startup
   ##
   lifecycleHooks: {}
-  ## Kafka init container resource requests and limits
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-  ## @param controller.initContainerResources.limits The resources limits for the init container
-  ## @param controller.initContainerResources.requests The requested resources for the init container
-  ##
-  initContainerResources:
-    limits: {}
-    requests: {}
   ## Kafka resource requests and limits
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## @param controller.resources.limits The resources limits for the container
   ## @param controller.resources.requests The requested resources for the container
   ##
@@ -603,24 +528,17 @@ controller:
   ## Kafka pods' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param controller.podSecurityContext.enabled Enable security context for the pods
-  ## @param controller.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
-  ## @param controller.podSecurityContext.sysctls Set kernel settings using the sysctl interface
-  ## @param controller.podSecurityContext.supplementalGroups Set filesystem extra groups
   ## @param controller.podSecurityContext.fsGroup Set Kafka pod's Security Context fsGroup
   ## @param controller.podSecurityContext.seccompProfile.type Set Kafka pods's Security Context seccomp profile
   ##
   podSecurityContext:
     enabled: true
-    fsGroupChangePolicy: Always
-    sysctls: []
-    supplementalGroups: []
     fsGroup: 1001
     seccompProfile:
       type: "RuntimeDefault"
   ## Kafka containers' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
   ## @param controller.containerSecurityContext.enabled Enable Kafka containers' Security Context
-  ## @param controller.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param controller.containerSecurityContext.runAsUser Set Kafka containers' Security Context runAsUser
   ## @param controller.containerSecurityContext.runAsNonRoot Set Kafka containers' Security Context runAsNonRoot
   ## @param controller.containerSecurityContext.allowPrivilegeEscalation Force the child process to be run as non-privileged
@@ -635,16 +553,12 @@ controller:
   ##
   containerSecurityContext:
     enabled: true
-    seLinuxOptions: null
     runAsUser: 1001
     runAsNonRoot: true
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
       drop: ["ALL"]
-  ## @param controller.automountServiceAccountToken Mount Service Account token in pod
-  ##
-  automountServiceAccountToken: false
   ## @param controller.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -696,7 +610,7 @@ controller:
   ##
   affinity: {}
   ## @param controller.nodeSelector Node labels for pod assignment
-  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector: {}
   ## @param controller.tolerations Tolerations for pod assignment
@@ -715,9 +629,6 @@ controller:
   ## ref: https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#pod-management-policy
   ##
   podManagementPolicy: Parallel
-  ## @param controller.minReadySeconds How many seconds a pod needs to be ready before killing the next, during update
-  ##
-  minReadySeconds: 0
   ## @param controller.priorityClassName Name of the existing priority class to be used by kafka pods
   ## Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   ##
@@ -788,7 +699,7 @@ controller:
     minAvailable: ""
     maxUnavailable: 1
   ## Enable persistence using Persistent Volume Claims
-  ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
   persistence:
     ## @param controller.persistence.enabled Enable Kafka data persistence using PVC, note that ZooKeeper persistence is unaffected
@@ -870,6 +781,7 @@ controller:
 ##
 broker:
   ## @param broker.replicaCount Number of Kafka broker-only nodes
+  ## Ignore this section if running in Zookeeper mode.
   ##
   replicaCount: 0
   ## @param broker.minId Minimal node.id values for broker-only nodes. Do not change after first initialization.
@@ -893,15 +805,6 @@ broker:
   ## @param broker.extraConfig Additional configuration to be appended at the end of the generated Kafka broker-only nodes configuration file.
   ##
   extraConfig: ""
-  ## @param broker.secretConfig Additional configuration to be appended at the end of the generated Kafka broker-only nodes configuration file.
-  ## This value will be stored in a secret.
-  ##
-  secretConfig: ""
-  ## @param broker.existingSecretConfig Secret with additonal configuration that will be appended to the end of the generated Kafka broker-only nodes configuration file
-  ## The key for the configuration should be: server-secret.properties
-  ## NOTE: This will override broker.secretConfig value
-  ##
-  existingSecretConfig: ""
   ## @param broker.heapOpts Kafka Java Heap size for broker-only nodes
   ##
   heapOpts: -Xmx1024m -Xms1024m
@@ -984,16 +887,8 @@ broker:
   ## @param broker.lifecycleHooks lifecycleHooks for the Kafka container to automate configuration before or after startup
   ##
   lifecycleHooks: {}
-  ## Kafka init container resource requests and limits
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
-  ## @param broker.initContainerResources.limits The resources limits for the container
-  ## @param broker.initContainerResources.requests The requested resources for the container
-  ##
-  initContainerResources:
-    limits: {}
-    requests: {}
   ## Kafka resource requests and limits
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## @param broker.resources.limits The resources limits for the container
   ## @param broker.resources.requests The requested resources for the container
   ##
@@ -1003,24 +898,17 @@ broker:
   ## Kafka pods' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param broker.podSecurityContext.enabled Enable security context for the pods
-  ## @param broker.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
-  ## @param broker.podSecurityContext.sysctls Set kernel settings using the sysctl interface
-  ## @param broker.podSecurityContext.supplementalGroups Set filesystem extra groups
   ## @param broker.podSecurityContext.fsGroup Set Kafka pod's Security Context fsGroup
   ## @param broker.podSecurityContext.seccompProfile.type Set Kafka pod's Security Context seccomp profile
   ##
   podSecurityContext:
     enabled: true
-    fsGroupChangePolicy: Always
-    sysctls: []
-    supplementalGroups: []
     fsGroup: 1001
     seccompProfile:
       type: "RuntimeDefault"
   ## Kafka containers' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
   ## @param broker.containerSecurityContext.enabled Enable Kafka containers' Security Context
-  ## @param broker.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param broker.containerSecurityContext.runAsUser Set Kafka containers' Security Context runAsUser
   ## @param broker.containerSecurityContext.runAsNonRoot Set Kafka containers' Security Context runAsNonRoot
   ## @param broker.containerSecurityContext.allowPrivilegeEscalation Force the child process to be run as non-privileged
@@ -1035,16 +923,12 @@ broker:
   ##
   containerSecurityContext:
     enabled: true
-    seLinuxOptions: null
     runAsUser: 1001
     runAsNonRoot: true
     allowPrivilegeEscalation: false
     readOnlyRootFilesystem: true
     capabilities:
       drop: ["ALL"]
-  ## @param broker.automountServiceAccountToken Mount Service Account token in pod
-  ##
-  automountServiceAccountToken: false
   ## @param broker.hostAliases Kafka pods host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
@@ -1096,7 +980,7 @@ broker:
   ##
   affinity: {}
   ## @param broker.nodeSelector Node labels for pod assignment
-  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector: {}
   ## @param broker.tolerations Tolerations for pod assignment
@@ -1115,9 +999,6 @@ broker:
   ## ref: https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#pod-management-policy
   ##
   podManagementPolicy: Parallel
-  ## @param broker.minReadySeconds How many seconds a pod needs to be ready before killing the next, during update
-  ##
-  minReadySeconds: 0
   ## @param broker.priorityClassName Name of the existing priority class to be used by kafka pods
   ## Ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/
   ##
@@ -1188,7 +1069,7 @@ broker:
     minAvailable: ""
     maxUnavailable: 1
   ## Enable persistence using Persistent Volume Claims
-  ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
   persistence:
     ## @param broker.persistence.enabled Enable Kafka data persistence using PVC, note that ZooKeeper persistence is unaffected
@@ -1266,6 +1147,7 @@ broker:
     ##
     mountPath: /opt/bitnami/kafka/logs
 
+
 ## @section Traffic Exposure parameters
 ##
 
@@ -1297,7 +1179,7 @@ service:
     external: ""
   ## @param service.sessionAffinity Control where client requests go, to the same pod or round-robin
   ## Values: ClientIP or None
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
+  ## ref: https://kubernetes.io/docs/user-guide/services/
   ##
   sessionAffinity: None
   ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
@@ -1312,7 +1194,7 @@ service:
   ##
   clusterIP: ""
   ## @param service.loadBalancerIP Kafka service Load Balancer IP
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
+  ## ref: https://kubernetes.io/docs/user-guide/services/#type-loadbalancer
   ##
   loadBalancerIP: ""
   ## @param service.loadBalancerSourceRanges Kafka service Load Balancer sources
@@ -1322,10 +1204,6 @@ service:
   ##   - 10.10.10.0/24
   ##
   loadBalancerSourceRanges: []
-  ## @param service.allocateLoadBalancerNodePorts Whether to allocate node ports when service type is LoadBalancer
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation
-  ##
-  allocateLoadBalancerNodePorts: true 
   ## @param service.externalTrafficPolicy Kafka service external traffic policy
   ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
   ##
@@ -1366,9 +1244,9 @@ externalAccess:
     enabled: false
     ## Bitnami Kubectl image
     ## ref: https://hub.docker.com/r/bitnami/kubectl/tags/
-    ## @param externalAccess.autoDiscovery.image.registry [default: REGISTRY_NAME] Init container auto-discovery image registry
-    ## @param externalAccess.autoDiscovery.image.repository [default: REPOSITORY_NAME/kubectl] Init container auto-discovery image repository
-    ## @skip externalAccess.autoDiscovery.image.tag Init container auto-discovery image tag (immutable tags are recommended)
+    ## @param externalAccess.autoDiscovery.image.registry Init container auto-discovery image registry
+    ## @param externalAccess.autoDiscovery.image.repository Init container auto-discovery image repository
+    ## @param externalAccess.autoDiscovery.image.tag Init container auto-discovery image tag (immutable tags are recommended)
     ## @param externalAccess.autoDiscovery.image.digest Kubectl image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
     ## @param externalAccess.autoDiscovery.image.pullPolicy Init container auto-discovery image pull policy
     ## @param externalAccess.autoDiscovery.image.pullSecrets Init container auto-discovery image pull secrets
@@ -1376,11 +1254,11 @@ externalAccess:
     image:
       registry: docker.io
       repository: bitnami/kubectl
-      tag: 1.29.1-debian-11-r3
+      tag: 1.25.13-debian-11-r5
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
       ##
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
@@ -1391,41 +1269,13 @@ externalAccess:
       ##
       pullSecrets: []
     ## Init Container resource requests and limits
-    ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
     ## @param externalAccess.autoDiscovery.resources.limits The resources limits for the auto-discovery init container
     ## @param externalAccess.autoDiscovery.resources.requests The requested resources for the auto-discovery init container
     ##
     resources:
       limits: {}
       requests: {}
-    ## Kafka provisioning containers' Security Context
-    ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.enabled Enable Kafka auto-discovery containers' Security Context
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.runAsUser Set Kafka auto-discovery containers' Security Context runAsUser
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.runAsNonRoot Set Kafka auto-discovery containers' Security Context runAsNonRoot
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.allowPrivilegeEscalation Set Kafka auto-discovery containers' Security Context allowPrivilegeEscalation
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.readOnlyRootFilesystem Set Kafka auto-discovery containers' Security Context readOnlyRootFilesystem
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.capabilities.drop Set Kafka auto-discovery containers' Security Context capabilities to be dropped
-    ## @param externalAccess.autoDiscovery.containerSecurityContext.seccompProfile.type Set Kafka auto-discovery seccomp profile type 
-    ## e.g:
-    ##   containerSecurityContext:
-    ##     enabled: true
-    ##     capabilities:
-    ##       drop: ["NET_RAW"]
-    ##     readOnlyRootFilesystem: true
-    ##
-    containerSecurityContext:
-      enabled: true
-      seLinuxOptions: null
-      runAsUser: 1001
-      runAsNonRoot: true
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop: ["ALL"]
-      seccompProfile:
-        type: "RuntimeDefault"
   ## Service settings
   controller:
     ## @param externalAccess.controller.forceExpose If set to true, force exposing controller-eligible nodes although they are configured as controller-only nodes
@@ -1470,10 +1320,6 @@ externalAccess:
       ## - 10.10.10.0/24
       ##
       loadBalancerSourceRanges: []
-      ## @param externalAccess.controller.service.allocateLoadBalancerNodePorts Whether to allocate node ports when service type is LoadBalancer
-      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation
-      ##
-      allocateLoadBalancerNodePorts: true 
       ## @param externalAccess.controller.service.nodePorts Array of node ports used for each Kafka broker. Length must be the same as replicaCount
       ## e.g:
       ## nodePorts:
@@ -1552,10 +1398,6 @@ externalAccess:
       ## - 10.10.10.0/24
       ##
       loadBalancerSourceRanges: []
-      ## @param externalAccess.broker.service.allocateLoadBalancerNodePorts Whether to allocate node ports when service type is LoadBalancer
-      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation
-      ##
-      allocateLoadBalancerNodePorts: true 
       ## @param externalAccess.broker.service.nodePorts Array of node ports used for each Kafka broker. Length must be the same as replicaCount
       ## e.g:
       ## nodePorts:
@@ -1652,9 +1494,9 @@ volumePermissions:
   ## @param volumePermissions.enabled Enable init container that changes the owner and group of the persistent volume
   ##
   enabled: false
-  ## @param volumePermissions.image.registry [default: REGISTRY_NAME] Init container volume-permissions image registry
-  ## @param volumePermissions.image.repository [default: REPOSITORY_NAME/os-shell] Init container volume-permissions image repository
-  ## @skip volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
+  ## @param volumePermissions.image.registry Init container volume-permissions image registry
+  ## @param volumePermissions.image.repository Init container volume-permissions image repository
+  ## @param volumePermissions.image.tag Init container volume-permissions image tag (immutable tags are recommended)
   ## @param volumePermissions.image.digest Init container volume-permissions image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
   ## @param volumePermissions.image.pullPolicy Init container volume-permissions image pull policy
   ## @param volumePermissions.image.pullSecrets Init container volume-permissions image pull secrets
@@ -1662,7 +1504,7 @@ volumePermissions:
   image:
     registry: docker.io
     repository: bitnami/os-shell
-    tag: 11-debian-11-r96
+    tag: 11-debian-11-r51
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -1674,7 +1516,7 @@ volumePermissions:
     ##
     pullSecrets: []
   ## Init container resource requests and limits
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## @param volumePermissions.resources.limits Init container volume-permissions resource limits
   ## @param volumePermissions.resources.requests Init container volume-permissions resource requests
   ##
@@ -1684,11 +1526,9 @@ volumePermissions:
   ## Init container' Security Context
   ## Note: the chown of the data folder is done to containerSecurityContext.runAsUser
   ## and not the below volumePermissions.containerSecurityContext.runAsUser
-  ## @param volumePermissions.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param volumePermissions.containerSecurityContext.runAsUser User ID for the init container
   ##
   containerSecurityContext:
-    seLinuxOptions: null
     runAsUser: 0
 
 ## @section Other Parameters
@@ -1708,7 +1548,7 @@ serviceAccount:
   ## @param serviceAccount.automountServiceAccountToken Allows auto mount of ServiceAccountToken on the serviceAccount created
   ## Can be set to false if pods using this serviceAccount do not need to use K8s API
   ##
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
   ## @param serviceAccount.annotations Additional custom annotations for the ServiceAccount
   ##
   annotations: {}
@@ -1736,9 +1576,9 @@ metrics:
     enabled: false
     ## Bitnami Kafka exporter image
     ## ref: https://hub.docker.com/r/bitnami/kafka-exporter/tags/
-    ## @param metrics.kafka.image.registry [default: REGISTRY_NAME] Kafka exporter image registry
-    ## @param metrics.kafka.image.repository [default: REPOSITORY_NAME/kafka-exporter] Kafka exporter image repository
-    ## @skip metrics.kafka.image.tag Kafka exporter image tag (immutable tags are recommended)
+    ## @param metrics.kafka.image.registry Kafka exporter image registry
+    ## @param metrics.kafka.image.repository Kafka exporter image repository
+    ## @param metrics.kafka.image.tag Kafka exporter image tag (immutable tags are recommended)
     ## @param metrics.kafka.image.digest Kafka exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
     ## @param metrics.kafka.image.pullPolicy Kafka exporter image pull policy
     ## @param metrics.kafka.image.pullSecrets Specify docker-registry secret names as an array
@@ -1746,11 +1586,11 @@ metrics:
     image:
       registry: docker.io
       repository: bitnami/kafka-exporter
-      tag: 1.7.0-debian-11-r140
+      tag: 1.7.0-debian-11-r93
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
       ##
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
@@ -1794,62 +1634,8 @@ metrics:
     ##
     containerPorts:
       metrics: 9308
-    ## @param metrics.kafka.livenessProbe.enabled Enable livenessProbe
-    ## @param metrics.kafka.livenessProbe.initialDelaySeconds Initial delay seconds for livenessProbe
-    ## @param metrics.kafka.livenessProbe.periodSeconds Period seconds for livenessProbe
-    ## @param metrics.kafka.livenessProbe.timeoutSeconds Timeout seconds for livenessProbe
-    ## @param metrics.kafka.livenessProbe.failureThreshold Failure threshold for livenessProbe
-    ## @param metrics.kafka.livenessProbe.successThreshold Success threshold for livenessProbe
-    ##
-    livenessProbe:
-      enabled: true
-      initialDelaySeconds: 5
-      periodSeconds: 10
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 3
-    ## @param metrics.kafka.readinessProbe.enabled Enable readinessProbe
-    ## @param metrics.kafka.readinessProbe.initialDelaySeconds Initial delay seconds for readinessProbe
-    ## @param metrics.kafka.readinessProbe.periodSeconds Period seconds for readinessProbe
-    ## @param metrics.kafka.readinessProbe.timeoutSeconds Timeout seconds for readinessProbe
-    ## @param metrics.kafka.readinessProbe.failureThreshold Failure threshold for readinessProbe
-    ## @param metrics.kafka.readinessProbe.successThreshold Success threshold for readinessProbe
-    ##
-    readinessProbe:
-      enabled: true
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 3
-    ## @param metrics.kafka.startupProbe.enabled Enable startupProbe
-    ## @param metrics.kafka.startupProbe.initialDelaySeconds Initial delay seconds for startupProbe
-    ## @param metrics.kafka.startupProbe.periodSeconds Period seconds for startupProbe
-    ## @param metrics.kafka.startupProbe.timeoutSeconds Timeout seconds for startupProbe
-    ## @param metrics.kafka.startupProbe.failureThreshold Failure threshold for startupProbe
-    ## @param metrics.kafka.startupProbe.successThreshold Success threshold for startupProbe
-    ##
-    startupProbe:
-      enabled: false
-      initialDelaySeconds: 5
-      periodSeconds: 5
-      timeoutSeconds: 1
-      successThreshold: 1
-      failureThreshold: 3
-    ## Custom Startup probes
-    ## @param metrics.kafka.customStartupProbe Override default startup probe
-    ##
-    customStartupProbe: {}
-    ## Custom Liveness probes
-    ## @param metrics.kafka.customLivenessProbe Override default liveness probe
-    ##
-    customLivenessProbe: {}
-    ## Custom Rediness probes
-    ## @param metrics.kafka.customReadinessProbe Override default readiness probe
-    ##
-    customReadinessProbe: {}
     ## Kafka exporter resource requests and limits
-    ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
     ## @param metrics.kafka.resources.limits The resources limits for the container
     ## @param metrics.kafka.resources.requests The requested resources for the container
     ##
@@ -1859,24 +1645,17 @@ metrics:
     ## Kafka exporter pods' Security Context
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
     ## @param metrics.kafka.podSecurityContext.enabled Enable security context for the pods
-    ## @param metrics.kafka.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
-    ## @param metrics.kafka.podSecurityContext.sysctls Set kernel settings using the sysctl interface
-    ## @param metrics.kafka.podSecurityContext.supplementalGroups Set filesystem extra groups
     ## @param metrics.kafka.podSecurityContext.fsGroup Set Kafka exporter pod's Security Context fsGroup
     ## @param metrics.kafka.podSecurityContext.seccompProfile.type Set Kafka exporter pod's Security Context seccomp profile
     ##
     podSecurityContext:
       enabled: true
-      fsGroupChangePolicy: Always
-      sysctls: []
-      supplementalGroups: []
       fsGroup: 1001
       seccompProfile:
         type: "RuntimeDefault"
     ## Kafka exporter containers' Security Context
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
     ## @param metrics.kafka.containerSecurityContext.enabled Enable Kafka exporter containers' Security Context
-    ## @param metrics.kafka.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
     ## @param metrics.kafka.containerSecurityContext.runAsUser Set Kafka exporter containers' Security Context runAsUser
     ## @param metrics.kafka.containerSecurityContext.runAsNonRoot Set Kafka exporter containers' Security Context runAsNonRoot
     ## @param metrics.kafka.containerSecurityContext.allowPrivilegeEscalation Set Kafka exporter containers' Security Context allowPrivilegeEscalation
@@ -1891,16 +1670,12 @@ metrics:
     ##
     containerSecurityContext:
       enabled: true
-      seLinuxOptions: null
       runAsUser: 1001
       runAsNonRoot: true
       allowPrivilegeEscalation: false
       readOnlyRootFilesystem: true
       capabilities:
         drop: ["ALL"]
-    ## @param metrics.kafka.automountServiceAccountToken Mount Service Account token in pod
-    ##
-    automountServiceAccountToken: false
     ## @param metrics.kafka.hostAliases Kafka exporter pods host aliases
     ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
     ##
@@ -1946,7 +1721,7 @@ metrics:
     ##
     affinity: {}
     ## @param metrics.kafka.nodeSelector Node labels for pod assignment
-    ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+    ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
     ##
     nodeSelector: {}
     ## @param metrics.kafka.tolerations Tolerations for pod assignment
@@ -2020,7 +1795,7 @@ metrics:
       clusterIP: ""
       ## @param metrics.kafka.service.sessionAffinity Control where client requests go, to the same pod or round-robin
       ## Values: ClientIP or None
-      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
+      ## ref: https://kubernetes.io/docs/user-guide/services/
       ##
       sessionAffinity: None
       ## @param metrics.kafka.service.annotations [object] Annotations for the Kafka exporter service
@@ -2043,7 +1818,7 @@ metrics:
       ## @param metrics.kafka.serviceAccount.automountServiceAccountToken Allows auto mount of ServiceAccountToken on the serviceAccount created
       ## Can be set to false if pods using this serviceAccount do not need to use K8s API
       ##
-      automountServiceAccountToken: false
+      automountServiceAccountToken: true
   ## Prometheus JMX exporter: exposes the majority of Kafka metrics
   ##
   jmx:
@@ -2055,9 +1830,9 @@ metrics:
     kafkaJmxPort: 5555
     ## Bitnami JMX exporter image
     ## ref: https://hub.docker.com/r/bitnami/jmx-exporter/tags/
-    ## @param metrics.jmx.image.registry [default: REGISTRY_NAME] JMX exporter image registry
-    ## @param metrics.jmx.image.repository [default: REPOSITORY_NAME/jmx-exporter] JMX exporter image repository
-    ## @skip metrics.jmx.image.tag JMX exporter image tag (immutable tags are recommended)
+    ## @param metrics.jmx.image.registry JMX exporter image registry
+    ## @param metrics.jmx.image.repository JMX exporter image repository
+    ## @param metrics.jmx.image.tag JMX exporter image tag (immutable tags are recommended)
     ## @param metrics.jmx.image.digest JMX exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
     ## @param metrics.jmx.image.pullPolicy JMX exporter image pull policy
     ## @param metrics.jmx.image.pullSecrets Specify docker-registry secret names as an array
@@ -2065,11 +1840,11 @@ metrics:
     image:
       registry: docker.io
       repository: bitnami/jmx-exporter
-      tag: 0.20.0-debian-11-r6
+      tag: 0.19.0-debian-11-r57
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
-      ## ref: https://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
+      ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
       ##
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets (secrets must be manually created in the namespace)
@@ -2082,7 +1857,6 @@ metrics:
     ## Prometheus JMX exporter containers' Security Context
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
     ## @param metrics.jmx.containerSecurityContext.enabled Enable Prometheus JMX exporter containers' Security Context
-    ## @param metrics.jmx.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
     ## @param metrics.jmx.containerSecurityContext.runAsUser Set Prometheus JMX exporter containers' Security Context runAsUser
     ## @param metrics.jmx.containerSecurityContext.runAsNonRoot Set Prometheus JMX exporter containers' Security Context runAsNonRoot
     ## @param metrics.jmx.containerSecurityContext.allowPrivilegeEscalation Set Prometheus JMX exporter containers' Security Context allowPrivilegeEscalation
@@ -2097,7 +1871,6 @@ metrics:
     ##
     containerSecurityContext:
       enabled: true
-      seLinuxOptions: null
       runAsUser: 1001
       runAsNonRoot: true
       allowPrivilegeEscalation: false
@@ -2109,7 +1882,7 @@ metrics:
     containerPorts:
       metrics: 5556
     ## Prometheus JMX exporter resource requests and limits
-    ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+    ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
     ## @param metrics.jmx.resources.limits The resources limits for the JMX exporter container
     ## @param metrics.jmx.resources.requests The requested resources for the JMX exporter container
     ##
@@ -2129,7 +1902,7 @@ metrics:
       clusterIP: ""
       ## @param metrics.jmx.service.sessionAffinity Control where client requests go, to the same pod or round-robin
       ## Values: ClientIP or None
-      ## ref: https://kubernetes.io/docs/concepts/services-networking/service/
+      ## ref: https://kubernetes.io/docs/user-guide/services/
       ##
       sessionAffinity: None
       ## @param metrics.jmx.service.annotations [object] Annotations for the Prometheus JMX exporter service
@@ -2236,9 +2009,6 @@ provisioning:
   ## @param provisioning.enabled Enable kafka provisioning Job
   ##
   enabled: false
-  ## @param provisioning.automountServiceAccountToken Mount Service Account token in pod
-  ##
-  automountServiceAccountToken: false
   ## @param provisioning.numPartitions Default number of partitions for topics when unspecified
   ##
   numPartitions: 1
@@ -2256,7 +2026,7 @@ provisioning:
   ##
   topics: []
   ## @param provisioning.nodeSelector Node labels for pod assignment
-  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
+  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
   ##
   nodeSelector: {}
   ## @param provisioning.tolerations Tolerations for pod assignment
@@ -2377,7 +2147,7 @@ provisioning:
   serviceAccount:
     ## @param provisioning.serviceAccount.create Enable creation of ServiceAccount for Kafka provisioning pods
     ##
-    create: true
+    create: false
     ## @param provisioning.serviceAccount.name The name of the service account to use. If not set and `create` is `true`, a name is generated
     ## If not set and create is true, a name is generated using the provisioning.serviceAccount.name template
     ##
@@ -2385,9 +2155,9 @@ provisioning:
     ## @param provisioning.serviceAccount.automountServiceAccountToken Allows auto mount of ServiceAccountToken on the serviceAccount created
     ## Can be set to false if pods using this serviceAccount do not need to use K8s API
     ##
-    automountServiceAccountToken: false
+    automountServiceAccountToken: true
   ## Kafka provisioning resource requests and limits
-  ## ref: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## @param provisioning.resources.limits The resources limits for the Kafka provisioning container
   ## @param provisioning.resources.requests The requested resources for the Kafka provisioning container
   ##
@@ -2397,24 +2167,17 @@ provisioning:
   ## Kafka provisioning pods' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param provisioning.podSecurityContext.enabled Enable security context for the pods
-  ## @param provisioning.podSecurityContext.fsGroupChangePolicy Set filesystem group change policy
-  ## @param provisioning.podSecurityContext.sysctls Set kernel settings using the sysctl interface
-  ## @param provisioning.podSecurityContext.supplementalGroups Set filesystem extra groups
   ## @param provisioning.podSecurityContext.fsGroup Set Kafka provisioning pod's Security Context fsGroup
   ## @param provisioning.podSecurityContext.seccompProfile.type Set Kafka provisioning pod's Security Context seccomp profile
   ##
   podSecurityContext:
     enabled: true
-    fsGroupChangePolicy: Always
-    sysctls: []
-    supplementalGroups: []
     fsGroup: 1001
     seccompProfile:
       type: "RuntimeDefault"
   ## Kafka provisioning containers' Security Context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
   ## @param provisioning.containerSecurityContext.enabled Enable Kafka provisioning containers' Security Context
-  ## @param provisioning.containerSecurityContext.seLinuxOptions [object,nullable] Set SELinux options in container
   ## @param provisioning.containerSecurityContext.runAsUser Set Kafka provisioning containers' Security Context runAsUser
   ## @param provisioning.containerSecurityContext.runAsNonRoot Set Kafka provisioning containers' Security Context runAsNonRoot
   ## @param provisioning.containerSecurityContext.allowPrivilegeEscalation Set Kafka provisioning containers' Security Context allowPrivilegeEscalation
@@ -2429,7 +2192,6 @@ provisioning:
   ##
   containerSecurityContext:
     enabled: true
-    seLinuxOptions: null
     runAsUser: 1001
     runAsNonRoot: true
     allowPrivilegeEscalation: false
@@ -2495,8 +2257,6 @@ kraft:
   ## @param kraft.enabled Switch to enable or disable the KRaft mode for Kafka
   ##
   enabled: true
-  ## @param kraft.existingClusterIdSecret Name of the secret containing the cluster ID for the Kafka KRaft cluster. This is incompatible with the clusterId parameter. If both are set, the existingClusterIdSecret will be used
-  existingClusterIdSecret: ""
   ## @param kraft.clusterId Kafka Kraft cluster ID. If not set, a random cluster ID will be generated the first time Kraft is initialized.
   ## NOTE: Already initialized Kafka nodes will use cluster ID stored in their persisted storage.
   ## If reusing existing PVCs or migrating from Zookeeper mode, make sure the cluster ID is set matching the stored cluster ID, otherwise new nodes will fail to join the cluster.
@@ -2543,7 +2303,7 @@ zookeeper:
       ##
       serverPasswords: ""
   ## ZooKeeper Persistence parameters
-  ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ## @param zookeeper.persistence.enabled Enable persistence on ZooKeeper using PVC(s)
   ## @param zookeeper.persistence.storageClass Persistent Volume storage class
   ## @param zookeeper.persistence.accessModes Persistent Volume access modes
