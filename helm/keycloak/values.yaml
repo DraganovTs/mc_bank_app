@@ -386,7 +386,7 @@ customStartupProbe: {}
 lifecycleHooks: {}
 ## @param automountServiceAccountToken Mount Service Account token in pod
 ##
-automountServiceAccountToken: true
+automountServiceAccountToken: false
 ## @param hostAliases Deployment pod host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##
@@ -682,7 +682,7 @@ ingress:
 networkPolicy:
   ## @param networkPolicy.enabled Specifies whether a NetworkPolicy should be created
   ##
-  enabled: true
+  enabled: false
   ## @param networkPolicy.allowExternal Don't require server label for connections
   ## The Policy model to apply. When set to false, only pods with the correct
   ## server label will have network access to the ports server is listening
@@ -747,7 +747,7 @@ serviceAccount:
   name: ""
   ## @param serviceAccount.automountServiceAccountToken Auto-mount the service account token in the pod
   ##
-  automountServiceAccountToken: false
+  automountServiceAccountToken: true
   ## @param serviceAccount.annotations Additional custom annotations for the ServiceAccount
   ##
   annotations: {}
@@ -953,7 +953,7 @@ keycloakConfigCli:
   args: []
   ## @param keycloakConfigCli.automountServiceAccountToken Mount Service Account token in pod
   ##
-  automountServiceAccountToken: true
+  automountServiceAccountToken: false
   ## @param keycloakConfigCli.hostAliases Job pod host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
   ##
