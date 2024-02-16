@@ -38,6 +38,7 @@
         <micrometer.registry.prometheus.version>1.12.2</micrometer.registry.prometheus.version>
         <opentelemetry.javaagent.version>1.32.0</opentelemetry.javaagent.version>
         <spring.security.oauth2.resource.server>6.2.0</spring.security.oauth2.resource.server>
+        <spring.cloud.starter.kubernetes.discoveryclient.version>2.1.3</spring.cloud.starter.kubernetes.discoveryclient.version>
     </properties>
 
     <dependencyManagement>
@@ -178,6 +179,11 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
                 <version>${spring.cloud.config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-kubernetes-discoveryclient</artifactId>
+                <version>${spring.cloud.starter.kubernetes.discoveryclient.version}</version>
             </dependency>
             <!--            spring-cloud-dependencies -->
             <dependency>
