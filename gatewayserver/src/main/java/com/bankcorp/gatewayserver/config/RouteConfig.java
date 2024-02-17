@@ -31,7 +31,7 @@ public class RouteConfig {
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
                                 .circuitBreaker(config -> config.setName("accountsCircuitBreaker")
                                         .setFallbackUri("forward:/contactSupport")))
-                        .uri("lb://ACCOUNTS"))
+                        .uri("http://accounts:8080"))
                 .route(path -> path
                         .path("/bankcorp/loans/**")
                         .filters(filter -> filter.rewritePath("/bankcorp/loans/(?<segment>.*)",
@@ -42,7 +42,7 @@ public class RouteConfig {
                                                 Duration.ofMillis(1000)
                                                 ,2,true))
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://LOANS"))
+                        .uri("http://loans:8090"))
                 .route(path -> path
                         .path("/bankcorp/cards/**")
                         .filters(filter -> filter.rewritePath("/bankcorp/cards/(?<segment>.*)",
@@ -50,7 +50,7 @@ public class RouteConfig {
                                 .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter())
                                         .setKeyResolver(userKeyResolver()))
                                 .addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-                        .uri("lb://CARDS"))
+                        .uri("http://cards:9000"))
                 .build();
     }
 
